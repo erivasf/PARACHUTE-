@@ -1,0 +1,41 @@
+* {
+  font-family: 'Bangers', cursive;
+}
+
+#main {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-image: url('/images/Notebook-Page-Background.jpg');
+  padding: 5rem;
+  overflow: hidden;
+}
+
+h1 {
+  top: 10%;
+  font-size: 120px;
+}
+
+canvas {
+  border: 10px solid black;
+  left: 25%;
+}
+
+button {
+  width: 400px;
+  height: 200px;
+  position: absolute;
+  font-size: 80px;
+  background-color: red;
+  border: 8px solid black;
+  border-radius: 15px;
+  color: white;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+}
