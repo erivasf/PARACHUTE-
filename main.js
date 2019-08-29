@@ -123,6 +123,9 @@ class Bullet {
 
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
   }
+  impact (){
+    if 
+  }
 }
 
 class Chopper {
