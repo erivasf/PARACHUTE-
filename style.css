@@ -10,13 +10,12 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background-image: url('/images/Notebook-Page-Background.jpg');
+  background-image: url('/Assets/images/Notebook-Page-Background.jpg');
   padding: 5rem;
   overflow: hidden;
 }
 
 h1 {
-  top: 10%;
   font-size: 120px;
 }
 
