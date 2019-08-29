@@ -42,7 +42,7 @@ class Cannon {
     this.frame = 11
     this.isShooting = false
     this.img = new Image()
-    this.img.src = '/Assets/images/css_Sprites.png'
+    this.img.src = 'Assets/images/css_Sprites.png'
     this.img.onload = () => {
       this.draw()
     }
