@@ -13,7 +13,7 @@ The game has three simple commands:
 - Right key to aim right.
 - Spacebar to shoot
 
-The game itself consists in shooting all the soldiers before they hit the ground; if they do, you´ll loose a life per soldier.
+The game itself consists in shooting all the soldiers before they hit the ground; if they do, you´ll loose a life per soldier. You only get three lives per round!
 
 Every 10 seconds a jet will fly by and drop you a bomb! You´ll need to shoot it twice to destroy it.
 
