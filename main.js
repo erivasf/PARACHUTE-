@@ -1,11 +1,13 @@
 const canvas = document.querySelector('canvas')
 const ctx = canvas.getContext('2d')
+const main = document.getElementById('main')
 const mySoldiers = []
 const myBullets = []
 const myBombs = []
-const myChoppers = []
-const muJets = []
+const myJets = []
 const myTimer = []
+let lives = 3
+let score = 0
 let frames = 0
 
 //Clases
@@ -71,7 +73,6 @@ class Cannon {
     else this.frame = 22
   }
   shoot() {
-    // 18 grados cada case
     this.isShooting = true
   }
 }
@@ -91,18 +92,10 @@ class Soldier {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
     if (frames > 500) this.y += this.speed
     else this.y++
-  }
-
-  bottom() {
-    return this.y + this.height
-  }
-
-  left() {
-    return this.x
-  }
-
-  right() {
-    return this.x + this.width
+    if (frames > 1000) this.y += this.speed
+    else this.y++
+    if (frames > 1500) this.y += this.speed
+    else this.y++
   }
 }
 
@@ -116,6 +109,7 @@ class Bullet {
     this.speedY = speedY
     this.img = new Image()
     this.img.src = 'Assets/images/Bullet.png'
+    this.hasImpact = false
   }
   draw() {
     this.x += this.speedX
@@ -123,31 +117,31 @@ class Bullet {
 
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
   }
-  // impact (){
-  //   if
-  // }
-}
 
-class Chopper {
-  constructor() {
-    this.width = 50
-    this.height = 40
-    this.x = canvas.width
-    this.y = 100
-    this.img = new Image()
-    this.img.src = 'Assets/images/chopper.png'
+  left() {
+    return this.x + this.y
   }
-  draw() {
-    ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
+
+  right() {
+    return this.x + this.width + this.height
+  }
+
+  impact(object) {
+    return (
+      this.x < object.x + object.width &&
+      this.x + this.width > object.x &&
+      this.y < object.y + object.height &&
+      this.y + this.height > object.y
+    )
   }
 }
 
 class Jet {
   constructor() {
-    this.width = 60
-    this.height = 30
-    this.x = canvas.width
-    this.y = 100
+    this.width = 175
+    this.height = 150
+    this.x = -this.width
+    this.y = 5
     this.img = new Image()
     this.img.src = 'Assets/images/Plane.png'
   }
@@ -159,26 +153,22 @@ class Jet {
 class Bomb {
   constructor() {
     this.life = 100
-    this.width = 10
-    this.height = 20
-    this.x = canvas.width / 2 - 5
-    this.y = 0
-    this.speed = 2
+    this.width = 40
+    this.height = 60
+    this.x = canvas.width / 2 - 20
+    this.y = 50
     this.img = new Image()
-    this.img.src = 'Assets/images/Bullet.png'
+    this.img.src = 'Assets/images/bomb.png'
   }
   draw() {
-    if (frames === 100) {
-      ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
-      this.y -= this.speed
-    }
+    ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
   }
 }
 class Timer {
   constructor(x) {
     this.life = 100
-    this.width = 15
-    this.height = 15
+    this.width = 40
+    this.height = 40
     this.x = x
     this.y = 0
     this.img = new Image()
@@ -187,29 +177,69 @@ class Timer {
   draw() {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height)
   }
+  bottom() {
+    return this.y + this.height
+  }
+
+  left() {
+    return this.x
+  }
+
+  right() {
+    return this.x + this.width
+  }
 }
 
 //Instancias
 const gameScreen = new GameScreen()
 const cannon = new Cannon()
 const soldier = new Soldier()
+const bullet = new Bullet()
 const jet = new Jet()
 const bomb = new Bomb()
-const chopper = new Chopper()
 const timer = new Timer()
 
-//Funciones
+//Functions
 function startGame() {
-  document.getElementById('button').style.display = 'none'
+  main.style.display = 'none'
+  document.querySelector('button').style.display = 'none'
+  document.getElementById('#instructions')
   document.getElementById('music1').play()
   document.getElementById('boom').play()
+  gameScreen.draw()
+  canvas.style.display = 'block'
   interval = setInterval(updateCanvas, 1000 / 60)
+}
+
+function endGame() {
+  clearInterval(interval)
+  ctx.font = '200px Impact'
+  ctx.fillStyle = 'black'
+  ctx.fillText('GAME OVER', 150, 500, 500)
+  ctx.font = '100px Impact'
+  ctx.fillStyle = 'red'
+  ctx.fillText('FINAL SCORE: ' + score, 150, 700, 500)
+  document.getElementById('gameover').play()
+  document.getElementById('music1').pause()
 }
 
 //Draws
 function drawSoldiers() {
-  mySoldiers.forEach(soldier => {
+  mySoldiers.forEach((soldier, i) => {
     soldier.draw()
+
+    if (soldier.y >= canvas.height - soldier.height) {
+      lives--
+      mySoldiers.shift()
+    }
+
+    myBullets.forEach((bullet, j) => {
+      if (bullet.impact(soldier)) {
+        myBullets.splice(j, 1)
+        mySoldiers.splice(i, 1)
+        score++
+      }
+    })
   })
 }
 
@@ -219,20 +249,81 @@ function drawBullets() {
   })
 }
 
-// function drawJet() {}
+function drawJets() {
+  myJets.forEach(jet => {
+    jet.draw()
+    jet.x += 3
 
-// function drawBomb(){
+    if (jet.x >= canvas.width) myJets.shift()
+    document.getElementById('jet').play()
+  })
+}
 
+function drawBombs() {
+  myBombs.forEach((bomb, i) => {
+    bomb.draw()
+    bomb.y += 3
+
+    myBullets.forEach((bullet, j) => {
+      if (bullet.impact(bomb)) {
+        bomb.life -= 50
+        myBullets.splice(j, 1)
+      }
+    })
+
+    if (bomb.life <= 0) {
+      score += 15
+      myBombs.splice(i, 1)
+    }
+
+    if (bomb.y + bomb.height >= canvas.height) {
+      document.getElementById('boom').play()
+      endGame()
+      lives = 0
+      updateCanvas()
+    }
+  })
+}
+
+// function drawTimer() {
+//   myTimer.forEach((timer, i) => {
+//     timer.draw()
+//     timer.y += 4
+
+//     if (timer.y > canvas.height) myTimer.shift()
+
+//     myBullets.forEach((bullet, j) => {
+//       if (bullet.impact(timer)) {
+//         myBullets.splice(j, 1)
+//         myTimer.splice(i, 1)
+
+//         interval = (updateCanvas, 2000 / 60)
+//       }
+//     })
+//   })
 // }
 
+function drawScore() {
+  ctx.font = '50px Impact'
+  ctx.fillStyle = 'black'
+  ctx.fillText('Score: ' + score, canvas.width - 250, 50, 150)
+}
+
+function drawLives() {
+  ctx.font = '50px Impact'
+  ctx.fillStyle = 'red'
+  ctx.fillText('Lives: ' + lives, 50, 50, 150)
+  if (lives === 0) {
+    lives--
+    endGame()
+  }
+}
 //Updates
 function updateSoldier() {
   if (frames % 110 === 0) {
     let x = Math.floor(Math.random() * (canvas.width - 60) + 5)
     mySoldiers.push(new Soldier(x))
   }
-
-  if (frames % 800 === 0) mySoldiers.shift()
 }
 
 function updateBullets() {
@@ -336,10 +427,31 @@ function updateBullets() {
       defalut: break
   }
 
-  if (cannon.isShooting) {
+  if (cannon.isShooting && frames % 15 === 0) {
     myBullets.push(new Bullet(sX, sY))
   }
 }
+
+function updateJets() {
+  if (frames % 750 === 0) {
+    myJets.push(new Jet())
+  }
+}
+
+function updateBombs() {
+  myJets.forEach(jet => {
+    if (jet.x >= canvas.width / 2 - 25 && jet.x <= canvas.width / 2 - 23) {
+      myBombs.push(new Bomb())
+    }
+  })
+}
+
+// function updateTimer() {
+//   if (frames % 1500 === 0) {
+//     let x = Math.floor(Math.random() * (canvas.width - 40) + 5)
+//     myTimer.push(new Timer(x))
+//   }
+// }
 
 //Game Loop
 function updateCanvas() {
@@ -347,14 +459,21 @@ function updateCanvas() {
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   gameScreen.draw()
   cannon.draw()
-  bomb.draw()
+  drawScore()
+  drawLives()
   updateSoldier()
   drawSoldiers()
   updateBullets()
   drawBullets()
+  updateJets()
+  drawJets()
+  updateBombs()
+  drawBombs()
+  // updateTimer()
+  // drawTimer()
 }
 //Funcionalidad de los botones
-document.getElementById('button').onclick = startGame
+document.querySelector('button').onclick = startGame
 
 document.onkeydown = e => {
   e.preventDefault()

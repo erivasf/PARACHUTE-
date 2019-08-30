@@ -11,18 +11,24 @@
 </head>
 
 <body>
-  <div id='main'>
-    <h1>PARACHUTE</h1>
-    <div id='button'>
-      <button class='btn-start'>START GAME</button>
+  <div id='container'>
+    <div id='main'>
+      <h1>PARACHUTE</h1>
+      <div id='instructions'>
+        <h2>INSTRUCTIONS</h2>
+        <p>PRESS LEFT OR RIGHT TO AIM</p>
+        <p>SPACEBAR TO SHOOT</p>
+        <button class='btn-start'>START GAME</button>
+      </div>
     </div>
     <canvas width='800' height='1000'></canvas>
   </div>
   <audio id='jet' src="Assets/audios/JetPassing.mp3"></audio>
-  <audio id='chopper' src="Assets/audios/HellicopterPassing.mp3"></audio>
   <audio id='gunshot' src="Assets/audios/GunShot.mp3"></audio>
   <audio id='music1' src="http://23.237.126.42/ost/killzone-2/acepvfdh/40%20air%20traffic%20control.mp3"></audio>
   <audio id='boom' src="Assets/audios/Cannon.mp3"></audio>
+  <audio id='bomb' src="Assets/audios/bomb.mp3"></audio>
+  <audio id='gameover' src="Assets/audios/GameOver.mp3"></audio>
   <script src="main.js"></script>
 </body>
 

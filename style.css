@@ -2,16 +2,24 @@
   font-family: 'Bangers', cursive;
 }
 
-#main {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
+/* body {
+  background-image: url('')
+} */
+
+#container {
   display: flex;
   justify-content: center;
+}
+
+#main {
+  /* position: relative; */
+  width: 800px;
+  height: 100vh;
+  display: flex;
   align-items: center;
   flex-direction: column;
   background-image: url('Assets/images/Notebook-Page-Background.jpg');
-  padding: 5rem;
+  padding: 50px;
   overflow: hidden;
 }
 
@@ -19,22 +27,37 @@ h1 {
   font-size: 120px;
 }
 
-canvas {
-  border: 10px solid black;
-  left: 25%;
+#instructions {
+  width: 400px;
+  height: 200px;
+  /* position: absolute; */
+  font-size: 40px;
+  color: black;
+  /* top: 40%;
+  left: 39%; */
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 button {
   width: 400px;
   height: 200px;
-  position: absolute;
+  /* position: absolute; */
   font-size: 80px;
   background-color: red;
   border: 8px solid black;
   border-radius: 15px;
   color: white;
-  top: 70%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  /* top: 70%;
+  left: 50%; */
+  /* transform: translate(-50%, -50%); */
 
+}
+
+canvas {
+  border: 10px solid black;
+  /* left: 25%; */
+  display: none;
+  background-image: url('Assets/images/Notebook-Page-Background.jpg');
 }
